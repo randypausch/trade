@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Share Prices App</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+</head>
+
+<body class="bg-light">
+
+    <div class="container-fluid mt-4">
+        <h2 class="text-center">Simulated Investment Games</h2>
+        <div id="timer" class="text-center mt-3"></div>
+        <div id="timer"></div>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+                <!-- ... (existing navbar content) ... -->
+                <!-- Logout Button -->
+                <button class="btn btn-danger" onclick="logout()">Logout</button>
+            </div>
+        </nav>
+        
+        
+        
+
+        <hr>
+        <div class="row">
+            <!-- First container for the first plot -->
+            <div class="col-md-6">
+                <div class="bg-white p-3 rounded text-center" style="white-space: nowrap;">
+                    <p style="display: inline-block; margin-right: 10px;" hidden>Your Wallet Amount: <span id="wallet_amount_1">{{ wallet_amount_1 }}</span></p>
+                    <p style="display: inline-block; margin-right: 10px;">Current Price: <span id="current_price_1">{{ current_price_1 }}</span></p>
+                    <p style="display: inline-block; margin-right: 10px;">Low Price: {{ lowest_price_1 }}</p>
+                    <p style="display: inline-block; margin-right: 10px;">High Price: {{ highest_price_1 }}</p>
+                    <p style="display: inline-block;">Number of Securities: <span id="stocks_owned_1">{{ stocks_owned_1 }}</span></p>
+                </div>
+            </div>
+            
+            <!-- Second container for the second plot -->
+            <div class="col-md-6">
+                <div class="bg-white p-3 rounded text-center">
+                    <p style="display: inline-block; margin-right: 10px;" hidden>Your Wallet Amount: <span id="wallet_amount_2">{{ wallet_amount_2 }}</span></p>
+                    <p style="display: inline-block; margin-right: 10px;">Current Price: <span id="current_price_2">{{ current_price_2 }}</span></p>
+                    <p style="display: inline-block; margin-right: 10px;">Low Price: {{ lowest_price_2 }}</p>
+                    <p style="display: inline-block; margin-right: 10px;">High Price: {{ highest_price_2 }}</p>
+                    <p style="display: inline-block;">Number of Securities: <span id="stocks_owned_2">{{ stocks_owned_2 }}</span></p>
+                </div>
+            </div>
+        </div>
+        <div>
+            {{ plot | safe }}
+        </div>
+        <div class="container mt-4">
+            <div class="row">
+                <div class="col-md-6">
+                    <form action="/perform_action1/1" method="post" onsubmit="return checkAction(1)" id="form_1">
+                        <label for="action_1">Select Action:</label>
+                        <select name="action_1" id="action_1" required onchange="return checkOption(1)"
+                            class="form-select mb-2">
+                            <option value="buy">Buy</option>
+                            <option value="sell">Sell</option>
+                            <option value="hold">Hold</option>
+                        </select>
+
+                        <!-- Input for buying stocks -->
+                        <div id="buyForm_1" class="mb-2">
+                            <label for="stocks_to_buy_1">Enter the amount of stocks to buy:</label>
+                            <input type="number" step="1" name="stocks_to_buy_1" id="stocks_to_buy_1"
+                                class="form-control">
+                        </div>
+
+                        <!-- Input for selling stocks -->
+                        <div id="sellForm_1" style="display: none;">
+                            <label for="stocks_to_sell_1">Enter the amount of stocks to sell:</label>
+                            <input type="number" step="1" name="stocks_to_sell_1" id="stocks_to_sell_1"
+                                class="form-control">
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" id="button_1">Perform Action</button>
+                    </form>
+                </div>
+                <div class="col-md-6">
+                    <form action="/perform_action1/2" method="post" onsubmit="return checkAction(2)" id="form_2">
+                        <label for="action_2">Select Action:</label>
+                        <select name="action_2" id="action_2" required onchange="return checkOption(2)"
+                            class="form-select mb-2">
+                            <option value="buy">Buy</option>
+                            <option value="sell">Sell</option>
+                            <option value="hold">Hold</option>
+                        </select>
+
+                        <!-- Input for buying stocks -->
+                        <div id="buyForm_2" class="mb-2">
+                            <label for="stocks_to_buy_2">Enter the amount of stocks to buy:</label>
+                            <input type="number" step="1" name="stocks_to_buy_2" id="stocks_to_buy_2"
+                                class="form-control">
+                        </div>
+
+                        <!-- Input for selling stocks -->
+                        <div id="sellForm_2" style="display: none;">
+                            <label for="stocks_to_sell_2">Enter the amount of stocks to sell:</label>
+                            <input type="number" step="1" name="stocks_to_sell_2" id="stocks_to_sell_2"
+                                class="form-control">
+                        </div>
+                        <button type="submit" class="btn btn-primary" id="button_2">Perform Action</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="container mt-4">
+            <div class="row">
+                <div class="col-md-6">
+                    <button class="btn btn-success" hidden><a href="/download_csv1/1" class="text-white">CSV
+                            1</a></button>
+                </div>
+                <div class="col-md-6">
+                    <button class="btn btn-success" hidden><a href="/download_csv1/2" class="text-white">CSV
+                            2</a></button>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            // Retrieve the value from local storage on page load
+            var form1Enabled = localStorage.getItem('form1Enabled') === 'true';
+
+            // Function to save the state to local storage
+            function saveFormState() {
+                localStorage.setItem('form1Enabled', form1Enabled);
+            }
+
+            function toggleForms() {
+                // Get form elements
+                var form1 = document.getElementById("form_1");
+                var form2 = document.getElementById("form_2");
+
+                console.log(form1Enabled);
+
+                // Get all input elements in the forms
+                var form1Inputs = form1.querySelectorAll('input, select, button');
+                var form2Inputs = form2.querySelectorAll('input, select, button');
+
+                // Disable or enable form elements based on the flag
+                for (var i = 0; i < form1Inputs.length; i++) {
+                    form1Inputs[i].disabled = form1Enabled;
+                }
+
+                for (var i = 0; i < form2Inputs.length; i++) {
+                    form2Inputs[i].disabled = !form1Enabled;
+                }
+            }
+            function setHoldActionTimer() {
+                setTimeout(function () {
+                    // Check if any form is currently active
+                    if (!document.activeElement || !document.activeElement.closest("form")) {
+                        // No form is currently active, trigger the "hold" action
+
+                        // Assuming you want to perform the hold action on form 1 if it's enabled
+                        if (!form1Enabled) {
+                            document.getElementById("action_1").value = "hold";
+                            document.getElementById("form_1").submit();
+                            form1Enabled = !form1Enabled; // Toggle the form state
+                            saveFormState(); // Save the state to local storage
+                        } else {
+                            // Perform the hold action on form 2 if form 1 is not enabled
+                            document.getElementById("action_2").value = "hold";
+                            document.getElementById("form_2").submit();
+                            form1Enabled = !form1Enabled; // Toggle the form state
+                            saveFormState(); // Save the state to local storage
+                        }
+                    }
+                }, 70000); // 30 seconds
+            }
+            function startTimer(seconds) {
+        setInterval(function () {
+            seconds--;
+            updateTimerDisplay(seconds);
+        }, 1000); // Update every second
+    }
+    function updateTimerDisplay(seconds) {
+        document.getElementById('timer').innerText = 'Time remaining: ' + seconds + ' seconds';
+        if (seconds === 10) {
+        alert("Hurry up! You have 10 seconds left. Else, hold will be chosen by default");
+    }
+    }
+
+            // Initialize the forms based on the initial state
+            toggleForms();
+            setHoldActionTimer();
+            setTimeout(function () {
+        startTimer(60); // You can replace 60 with the desired number of seconds
+    }, 10000); // 10 seconds delay
+
+            
+            function resetHoldTimer() {
+                // Reset the timer when an option is selected or an action is performed
+                clearTimeout(holdActionTimeout);
+                setHoldActionTimer();
+            }
+
+            function checkOption(formId) {
+                var selectedAction = document.getElementById("action_" + formId).value;
+                var buyForm = document.getElementById("buyForm_" + formId);
+                var sellForm = document.getElementById("sellForm_" + formId);
+
+                if (selectedAction === "buy") {
+                    buyForm.style.display = "block";
+                    sellForm.style.display = "none";
+                } else if (selectedAction === "sell") {
+                    buyForm.style.display = "none";
+                    sellForm.style.display = "block";
+                } else {
+                    buyForm.style.display = "none";
+                    sellForm.style.display = "none";
+                }
+                
+                return true;
+            }
+
+            function checkAction(formId) {
+                var selectedAction = document.getElementById("action_" + formId).value;
+                if (!selectedAction) {
+                    alert("Please select an action.");
+                    return false;
+                }
+
+                if (selectedAction === "buy") {
+                    var stocksToBuy = document.getElementById("stocks_to_buy_" + formId).value.trim();
+                    if (!stocksToBuy) {
+                        alert("Please enter the amount of stocks to buy.");
+                        return false;
+                    }
+                    return checkFunds(formId);
+                } else if (selectedAction === "sell") {
+                    var stocksToSell = document.getElementById("stocks_to_sell_" + formId).value.trim();
+                    if (!stocksToSell) {
+                        alert("Please enter the amount of stocks to sell.");
+                        return false;
+                    }
+                    return checkStocks(formId);
+                } else {
+                    form1Enabled = !form1Enabled;
+                    saveFormState(); // Save the state to local storage
+                    resetHoldTimer()
+                    return true; // No additional checks needed for "Hold"
+                }
+            }
+
+            function checkFunds(formId) {
+                var stocksToBuy = parseFloat(document.getElementById("stocks_to_buy_" + formId).value);
+                var walletAmount = parseFloat(document.getElementById("wallet_amount_" + formId).innerText);
+                var currentStockPrice = parseFloat(document.getElementById("current_price_" + formId).innerText);
+                var cost = stocksToBuy * currentStockPrice;
+
+                console.log(stocksToBuy, walletAmount, currentStockPrice, cost);
+
+                if (walletAmount >= cost) {
+                    form1Enabled = !form1Enabled; // Toggle the form state
+                    saveFormState(); // Save the state to local storage
+                    resetHoldTimer();
+                    return true;
+                } else {
+                    alert("Insufficient funds to buy stocks!");
+                    return false;
+                }
+            }
+
+            function checkStocks(formId) {
+                var stocksOwned = parseInt(document.getElementById("stocks_owned_" + formId).innerText);
+                var stocksToSell = parseInt(document.getElementById("stocks_to_sell_" + formId).value);
+
+                console.log(stocksOwned, stocksToSell);
+
+                if (stocksToSell <= stocksOwned) {
+                    form1Enabled = !form1Enabled; // Toggle the form state
+                    saveFormState(); // Save the state to local storage
+                    resetHoldTimer();
+                    return true;
+                } else {
+                    alert("Not enough stocks to sell!");
+                    return false;
+                }
+            }
+            function downloadCSV(formId) {
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "/download_csv1/" + formId, true);
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                // Optional: You can handle the response if needed
+                console.log("CSV downloaded successfully");
+            }
+        };
+        xhr.send();
+    }
+
+
+    function getLoadCount() {
+    return sessionStorage.getItem('loadCount') || 0;
+}
+
+// Function to set the load count in sessionStorage
+function setLoadCount(count) {
+    sessionStorage.setItem('loadCount', count);
+}
+
+// Function to check the load count and redirect on the 26th load
+
+function checkLoadAndRedirect() {
+    // Increment the load count
+    let loadCount = parseInt(getLoadCount(), 10) + 1;
+    setLoadCount(loadCount);
+    console.log(loadCount);
+
+    // Check if it's the 25th load; 1 time for the first load and then for the plots.
+    if (loadCount === 25) {
+
+        // Redirect to another page
+        setLoadCount(0);
+        downloadCSV(1);
+        downloadCSV(2);
+        window.location.href = '/final';
+        
+    }   
+}
+
+
+function logout() {
+        // Perform any additional logout tasks if needed
+        
+        // Reset the load count in sessionStorage
+        setLoadCount(0);
+
+        // Redirect to the logout route or perform any other actions
+        window.location.href = '/logout';
+    }
+
+// Call checkLoadAndRedirect on window.onload
+window.onload = checkLoadAndRedirect;
+        </script>
+
+</body>
+
+</html>
