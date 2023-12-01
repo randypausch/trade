@@ -1685,7 +1685,7 @@ def update_session_4(action,current_price, stocks_bought, stocks_sold, stocks_he
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host='0.0.0.0',debug=True)
 
 
 
